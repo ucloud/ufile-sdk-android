@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">UfileSdkDemo</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">UCloud Ufile SDK</string>
+    <string name="nav_header_subtitle">https://github.com/ucloud/ufile-sdk-android</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Setting</string>
+
+    <!-- app string -->
+    <string name="str_object_list">对象列表</string>
+    <string name="str_bucket_list">仓库列表</string>
+    <string name="str_config">配置</string>
+    <string name="str_secret_key">密钥</string>
+    <string name="str_domain">域名</string>
+    <string name="str_default_bucket">默认仓库</string>
+    <string name="str_region">地区</string>
+    <string name="str_domain_proxy_suffix">域名后缀</string>
+    <string name="str_select_key_from">请选择密钥输入来源</string>
+    <string name="str_from_qrcode">二维码</string>
+    <string name="str_from_file">文件导入</string>
+    <string name="str_from_input">手动输入</string>
+    <string name="str_got_it">知道了</string>
+    <string name="str_sure">确定</string>
+    <string name="str_cancel">取消</string>
+    <string name="str_current_bucket_colon">当前仓库: </string>
+    <string name="str_search_empty_data">查询无结果</string>
+    <string name="str_name">名称</string>
+    <string name="str_type_colon">类型:</string>
+    <string name="str_size_colon">大小:</string>
+    <string name="str_bucket_colon">仓库:</string>
+    <string name="str_crete_time_colon">创建时间:</string>
+    <string name="str_modify_time_colon">修改时间:</string>
+    <string name="str_pull_up_load_more">上拉加载更多</string>
+    <string name="str_waiting">请稍后...</string>
+    <string name="str_download">下载</string>
+    <string name="str_delete">删除</string>
+    <string name="str_current_directory">当前文件夹</string>
+    <string name="str_make_directory">新建文件夹</string>
+    <string name="str_directory">文件夹</string>
+    <string name="str_directory_exists">文件夹 \"%1$s\" 已存在！</string>
+    <string name="str_directory_failed">新建文件夹失败！</string>
+    <string name="str_delete_success">删除成功</string>
+    <string name="str_delete_confirm">是否确认将 \"%1$s\" 从 \"%2$s\" 仓库中删除</string>
+    <string name="str_error">错误</string>
+    <string name="str_file_illegal">非法的目录文件</string>
+
+    <!-- alert -->
+    <string name="alert_no_public_key">您未配置公钥！\n请在&#034;gradle.properties&#034;中配置</string>
+    <string name="alert_no_auth_server_url">您未配置签名服务API地址！\n请在&#034;gradle.properties&#034;中配置</string>
+    <string name="alert_input_bucket">请输入仓库名称</string>
+    <string name="alert_select_region">请选择仓库所属地区</string>
+    <string name="alert_input_proxy_suffix">请输入域名后缀</string>
+</resources>

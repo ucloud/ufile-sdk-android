@@ -1,0 +1,80 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "cn.ucloud.ufile.demo"
+        minSdkVersion 14
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField('String', 'PUBLIC_KEY', toJavaCodeString(PUBLIC_KEY))
+        buildConfigField('String', 'AUTH_URL', toJavaCodeString(AUTH_URL))
+        buildConfigField('String', 'AUTH_PRIVATE_DOWNLOAD_URL', toJavaCodeString(AUTH_PRIVATE_DOWNLOAD_URL))
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'cn.ucloud.ufile:ufile-client-java:2.0.6'
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-19'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-19'//没有使用特殊Header，可以不加这行
+}
+
+
+class Utils {
+    static def r = new Random(System.currentTimeMillis())
+}
+
+String toJavaCodeString(String string) {
+    byte[] b = string.getBytes()
+    int c = b.length
+    StringBuffer sb = new StringBuffer()
+
+    sb.append("new Object(){")
+    sb.append("int t;")
+    sb.append("public String toString() {")
+    sb.append("byte[] buf = new byte[")
+    sb.append(c)
+    sb.append("];")
+
+    for (int i = 0; i < c; ++i) {
+        int t = Utils.r.nextInt()
+        int f = Utils.r.nextInt(24) + 1
+
+        t = (t & ~(0xff << f)) | (b[i] << f)
+
+        sb.append("t = ")
+        sb.append(t)
+        sb.append(";")
+        sb.append("buf[")
+        sb.append(i)
+        sb.append("] = (byte) (t >>> ")
+        sb.append(f)
+        sb.append(");")
+    }
+
+    sb.append("return new String(buf);")
+    sb.append("}}.toString()")
+
+    return sb.toString()
+}
+
