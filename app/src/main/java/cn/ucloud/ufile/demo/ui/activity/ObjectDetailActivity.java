@@ -1,6 +1,7 @@
 package cn.ucloud.ufile.demo.ui.activity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,19 +21,21 @@ import java.util.Date;
 
 import cn.ucloud.ufile.UfileClient;
 import cn.ucloud.ufile.api.ApiError;
+import cn.ucloud.ufile.api.object.ObjectApiBuilder;
 import cn.ucloud.ufile.api.object.ObjectConfig;
 import cn.ucloud.ufile.auth.ObjectAuthorizer;
 import cn.ucloud.ufile.auth.ObjectRemoteAuthorization;
 import cn.ucloud.ufile.auth.UfileObjectRemoteAuthorization;
 import cn.ucloud.ufile.bean.ObjectInfoBean;
+import cn.ucloud.ufile.bean.ObjectProfile;
 import cn.ucloud.ufile.bean.UfileErrorBean;
 import cn.ucloud.ufile.bean.base.BaseResponseBean;
 import cn.ucloud.ufile.demo.Constants;
 import cn.ucloud.ufile.demo.R;
 import cn.ucloud.ufile.demo.data.USharedPreferenceHolder;
+import cn.ucloud.ufile.demo.ui.dialog.DownloadDialog;
 import cn.ucloud.ufile.demo.ui.dialog.ProgressDialog;
 import cn.ucloud.ufile.demo.utils.FileUtil;
-import cn.ucloud.ufile.demo.utils.JLog;
 import cn.ucloud.ufile.demo.utils.PermissionUtil;
 import cn.ucloud.ufile.http.UfileCallback;
 import okhttp3.Request;
@@ -215,18 +218,70 @@ public class ObjectDetailActivity extends BaseActivity implements View.OnClickLi
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        JLog.E(TAG, "onActivityResult--->[reqCode]:" + requestCode + " [resCode]:" + resultCode);
         switch (requestCode) {
             case REQ_CODE_SELECT_DIRECTORY: {
                 if (resultCode != RESULT_OK)
                     return;
                 
                 File file = (File) data.getSerializableExtra("directory");
-                JLog.E(TAG, "select dir=" + file.getAbsolutePath());
+                downloadObject(file.getAbsolutePath());
                 break;
             }
             default:
                 super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+    
+    private void downloadObject(String saveDir) {
+        progressDialog.show();
+        ObjectApiBuilder apiBuilder = UfileClient.object(authorization, objectConfig);
+        apiBuilder.objectProfile(objectInfo.getFileName(), objectInfo.getBucketName())
+                .executeAsync(new UfileCallback<ObjectProfile>() {
+                    @Override
+                    public void onResponse(ObjectProfile response) {
+                        getHandler().post(() -> {
+                            progressDialog.dismiss();
+                            DownloadDialog downloadDialog = new DownloadDialog.Builder(ObjectDetailActivity.this, R.style.DialogNoBgTheme)
+                                    .setCancelable(false)
+                                    .setObjectProfile(response)
+                                    .setSavePath(saveDir)
+                                    .setObjectApiBuilder(apiBuilder)
+                                    .setOnDownloadDialogListener(new DownloadDialog.OnDownloadDialogListener() {
+                                        @Override
+                                        public void onSuccess(Dialog dialog) {
+                                            dialog.dismiss();
+                                            Toast.makeText(ObjectDetailActivity.this, R.string.str_download_success, Toast.LENGTH_SHORT).show();
+                                        }
+                                        
+                                        @Override
+                                        public void onFailed(Dialog dialog, String errMsg) {
+                                            dialog.dismiss();
+                                            new AlertDialog.Builder(ObjectDetailActivity.this)
+                                                    .setTitle(R.string.str_error)
+                                                    .setMessage(errMsg)
+                                                    .setPositiveButton(R.string.str_got_it, (alertDialog, which) -> alertDialog.dismiss())
+                                                    .setCancelable(false)
+                                                    .create().show();
+                                        }
+                                    })
+                                    .create();
+                            
+                            downloadDialog.show();
+                        });
+                    }
+                    
+                    @Override
+                    public void onError(Request request, ApiError error, UfileErrorBean response) {
+                        getHandler().post(() -> {
+                            progressDialog.dismiss();
+                            new AlertDialog.Builder(ObjectDetailActivity.this)
+                                    .setTitle(R.string.str_error)
+                                    .setMessage(response == null ? error.toString() : response.getErrMsg())
+                                    .setPositiveButton(R.string.str_got_it, (dialog, which) -> dialog.dismiss())
+                                    .setCancelable(false)
+                                    .create().show();
+                        });
+                    }
+                });
     }
 }

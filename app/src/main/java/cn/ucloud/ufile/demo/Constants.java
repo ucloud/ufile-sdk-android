@@ -10,6 +10,7 @@ public class Constants {
         KEY_REGION,
         KEY_PROXY_SUFFIX,
         KEY_DEFAULT_BUCKET,
+        KEY_LATEST_DOWNLOAD_DIRECTORY,
     }
     
     public static final String PUBLIC_KEY = BuildConfig.PUBLIC_KEY;

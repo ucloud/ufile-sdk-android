@@ -8,36 +8,34 @@ import java.util.ArrayList;
 
 import cn.ucloud.ufile.util.Encoder;
 import cn.ucloud.ufile.util.HexFormatter;
-import cn.ucloud.ufile.util.JLog;
 
 /**
- *
  * @author: joshua
  * @E-mail: joshua.yin@ucloud.cn
  * @date: 2018/11/11 22:55
  */
 public class FileUtil {
     private static final String TAG = "FileUtil";
-
+    
     public static final int IO_BUFFER_SIZE = 256 << 10;
-
+    
     public static File searchFile(File file, final String fileName, final boolean isDstIsFile) {
         if (file == null || !file.exists() || fileName == null || fileName.length() == 0)
             return null;
-
-        cn.ucloud.ufile.util.JLog.T(TAG, "searchFile--->[isFile]:" + file.isFile() + " [isDir]:" + file.isDirectory());
-
+        
+        JLog.T(TAG, "searchFile--->[isFile]:" + file.isFile() + " [isDir]:" + file.isDirectory());
+        
         if (file.getName().equals(fileName)
                 && ((isDstIsFile && file.isFile()) || (!isDstIsFile && file.isDirectory())))
             return file;
-
+        
         ArrayList<File> subDirs = new ArrayList<>();
         File res = null;
         if (file.isDirectory()) {
             File[] files = file.listFiles();
-
+            
             for (File f : files) {
-                cn.ucloud.ufile.util.JLog.T(TAG, "searchFile--->for-->[path]:" + f.getAbsolutePath() + " [name]:" + f.getName()
+                JLog.T(TAG, "searchFile--->for-->[path]:" + f.getAbsolutePath() + " [name]:" + f.getName()
                         + " [isFile]:" + f.isFile() + " [isDir]:" + f.isDirectory());
                 if (f.getName().equals(fileName)
                         && ((isDstIsFile && f.isFile()) || (!isDstIsFile && f.isDirectory()))) {
@@ -47,20 +45,20 @@ public class FileUtil {
                         subDirs.add(f);
                 }
             }
-
+            
             for (File sd : subDirs) {
                 if ((res = searchFile(sd, fileName, isDstIsFile)) != null)
                     return res;
             }
         }
-
+        
         return res;
     }
-
+    
     public static byte[] readSmallFileByteArr(File file) throws IOException {
         if (file == null || !file.exists())
             return null;
-
+        
         FileInputStream fis = null;
         BufferedInputStream bis = null;
         byte[] res = null;
@@ -83,14 +81,14 @@ public class FileUtil {
         } finally {
             close(bis, fis);
         }
-
+        
         return res;
     }
-
+    
     public static String readSmallFileStringContent(File file) throws IOException {
         if (file == null || !file.exists() || !file.isFile())
             return null;
-
+        
         FileReader fr = null;
         BufferedReader br = null;
         StringBuffer res = new StringBuffer();
@@ -106,17 +104,17 @@ public class FileUtil {
         } finally {
             close(br, fr);
         }
-
+        
         return res.toString();
     }
-
+    
     public static boolean checkFileMD5(File file, String md5) throws IOException {
         if (file == null || !file.exists() || !file.isFile())
             return false;
-
+        
         if (md5 == null || md5.length() == 0)
             return false;
-
+        
         String fileMD5 = null;
         try {
             fileMD5 = HexFormatter.formatByteArray2HexString(Encoder.md5(file), true);
@@ -124,16 +122,16 @@ public class FileUtil {
             e.printStackTrace();
             return false;
         }
-
-        cn.ucloud.ufile.util.JLog.T(TAG, "checkFileMD5--->[file]:" + fileMD5 + " [md5]:" + md5);
-
+        
+        JLog.T(TAG, "checkFileMD5--->[file]:" + fileMD5 + " [md5]:" + md5);
+        
         return (fileMD5 != null && fileMD5.length() > 0 && fileMD5.equals(md5));
     }
-
+    
     public static void deleteFileCleanly(File file) {
         if (file == null || !file.exists())
             return;
-
+        
         if (file.isDirectory()) {
             File[] files = file.listFiles();
             for (File f : files)
@@ -144,15 +142,15 @@ public class FileUtil {
             JLog.T(TAG, "deleteFileCleanly--->" + file.getAbsolutePath() + "delete=" + res);
         }
     }
-
+    
     public static void close(Closeable... closeable) {
         if (closeable == null)
             return;
-
+        
         for (Closeable c : closeable) {
             if (c == null)
                 continue;
-
+            
             try {
                 c.close();
             } catch (IOException e) {

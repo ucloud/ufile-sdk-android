@@ -13,7 +13,7 @@ import android.support.annotation.Nullable;
  */
 
 public abstract class BaseDialog extends Dialog {
-    private final String TAG = getClass().getSimpleName();
+    protected final String TAG = getClass().getSimpleName();
     protected Context mContext;
     
     public BaseDialog(@NonNull Context context) {
@@ -56,7 +56,7 @@ public abstract class BaseDialog extends Dialog {
     
     protected abstract void bindWidget();
     
-    protected abstract void initView();
-    
     protected abstract void initData();
+    
+    protected abstract void initView();
 }

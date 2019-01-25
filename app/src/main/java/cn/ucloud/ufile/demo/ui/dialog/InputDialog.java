@@ -24,7 +24,7 @@ public class InputDialog extends BaseDialog implements View.OnClickListener {
     
     private String title, content;
     
-    private DialogInputListener listener;
+    private OnDialogInputListener onDialogInputListener;
     
     private InputDialog(@NonNull Context context) {
         super(context);
@@ -55,6 +55,24 @@ public class InputDialog extends BaseDialog implements View.OnClickListener {
     }
     
     @Override
+    public void setTitle(int titleId) {
+        this.setTitle(getContext().getString(titleId));
+    }
+    
+    @Override
+    public void setTitle(@Nullable CharSequence title) {
+        this.title = title == null ? null : title.toString();
+    }
+    
+    public void setOnDialogInputListener(OnDialogInputListener onDialogInputListener) {
+        this.onDialogInputListener = onDialogInputListener;
+    }
+    
+    public void setContent(String content) {
+        this.content = content;
+    }
+    
+    @Override
     protected void initData() {
     
     }
@@ -74,22 +92,22 @@ public class InputDialog extends BaseDialog implements View.OnClickListener {
     
     @Override
     public void onClick(View v) {
-        if (listener == null)
+        if (onDialogInputListener == null)
             return;
         
         switch (v.getId()) {
             case R.id.txt_dialog_cancel: {
-                listener.onCancel(this);
+                onDialogInputListener.onCancel(this);
                 break;
             }
             case R.id.txt_dialog_ok: {
-                listener.onFinish(this, edit_input.getText().toString());
+                onDialogInputListener.onFinish(this, edit_input.getText().toString());
                 break;
             }
         }
     }
     
-    public interface DialogInputListener {
+    public interface OnDialogInputListener {
         void onFinish(Dialog dialog, CharSequence content);
         
         void onCancel(Dialog dialog);
@@ -100,7 +118,7 @@ public class InputDialog extends BaseDialog implements View.OnClickListener {
         private Integer themeResId;
         private String title, defaultContent;
         private boolean isCancelable, isOutsideTouchCancelable;
-        private DialogInputListener listener;
+        private OnDialogInputListener onDialogInputListener;
         
         public Builder(Context context) {
             this.context = context;
@@ -139,8 +157,8 @@ public class InputDialog extends BaseDialog implements View.OnClickListener {
             return this;
         }
         
-        public Builder setDialogInputListener(DialogInputListener listener) {
-            this.listener = listener;
+        public Builder setOnDialogInputListener(OnDialogInputListener onDialogInputListener) {
+            this.onDialogInputListener = onDialogInputListener;
             return this;
         }
         
@@ -150,7 +168,7 @@ public class InputDialog extends BaseDialog implements View.OnClickListener {
             dialog.content = defaultContent;
             dialog.setCanceledOnTouchOutside(isOutsideTouchCancelable);
             dialog.setCancelable(isCancelable);
-            dialog.listener = listener;
+            dialog.onDialogInputListener = onDialogInputListener;
             
             return dialog;
         }

@@ -44,6 +44,10 @@
     <string name="str_delete_confirm">是否确认将 \"%1$s\" 从 \"%2$s\" 仓库中删除</string>
     <string name="str_error">错误</string>
     <string name="str_file_illegal">非法的目录文件</string>
+    <string name="str_downloading">正在下载</string>
+    <string name="str_uploading">正在上传</string>
+    <string name="str_download_success">下载成功</string>
+    <string name="str_upload_success">上传成功</string>
 
     <!-- alert -->
     <string name="alert_no_public_key">您未配置公钥！\n请在&#034;gradle.properties&#034;中配置</string>

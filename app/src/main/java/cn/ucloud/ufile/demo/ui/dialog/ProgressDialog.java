@@ -68,6 +68,25 @@ public class ProgressDialog extends BaseDialog {
         }
     }
     
+    @Override
+    public void setTitle(@StringRes int titleId) {
+        super.setTitle(titleId);
+        this.setTitle(getContext().getString(titleId));
+    }
+    
+    @Override
+    public void setTitle(@Nullable CharSequence title) {
+        this.title = title == null ? null : title.toString();
+    }
+    
+    public void setMessage(@StringRes int messageId) {
+        this.setMessage(getContext().getString(messageId));
+    }
+    
+    public void setMessage(CharSequence message) {
+        this.message = message == null ? null : message.toString();
+    }
+    
     public static class Builder {
         private Context context;
         private Integer themeResId;

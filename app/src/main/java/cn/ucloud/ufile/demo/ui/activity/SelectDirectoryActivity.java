@@ -23,11 +23,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import cn.ucloud.ufile.demo.Constants;
 import cn.ucloud.ufile.demo.R;
+import cn.ucloud.ufile.demo.data.USharedPreferenceHolder;
 import cn.ucloud.ufile.demo.ui.adapter.FileAdapter;
 import cn.ucloud.ufile.demo.ui.dialog.InputDialog;
 import cn.ucloud.ufile.demo.ui.widgets.DirectoryView;
 import cn.ucloud.ufile.demo.ui.widgets.PathScrollView;
+import cn.ucloud.ufile.demo.utils.FileUtil;
+import cn.ucloud.ufile.demo.utils.JLog;
 
 /**
  * Created by joshua on 2019/1/23 17:31.
@@ -35,11 +39,10 @@ import cn.ucloud.ufile.demo.ui.widgets.PathScrollView;
  * E-mail: joshua.yin@ucloud.cn
  */
 public class SelectDirectoryActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
-    private final int REQ_CODE_WRITE_READ_STORAGE = 0x1000;
-    
     private PathScrollView scroll_view_directory_path;
     private ListView list_file_system;
     
+    private USharedPreferenceHolder.USharedPreferences uSharedPreferences;
     private File rootDirectory, currentDirectory;
     private List<DirectoryView> pathViewList;
     private FileAdapter adapter;
@@ -48,29 +51,6 @@ public class SelectDirectoryActivity extends BaseActivity implements View.OnClic
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-    
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        
-        switch (requestCode) {
-            case REQ_CODE_WRITE_READ_STORAGE: {
-                if (permissions == null || permissions.length == 0)
-                    return;
-                
-                for (int i = 0, len = permissions.length; i < len; i++) {
-                    if (TextUtils.equals(permissions[i], Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                        if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                            
-                            return;
-                        }
-                    }
-                }
-                break;
-            }
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
     
     @Override
     protected int getContentViewId() {
@@ -107,20 +87,55 @@ public class SelectDirectoryActivity extends BaseActivity implements View.OnClic
     
     @Override
     protected void initData() {
+        uSharedPreferences = USharedPreferenceHolder.getHolder().getSharedPreferences();
         Intent intent = getIntent();
         if (intent != null)
             rootDirectory = (File) intent.getSerializableExtra("rootDirectory");
-        currentDirectory = rootDirectory;
+        else
+            rootDirectory = Environment.getExternalStorageDirectory();
         
-        if (currentDirectory == null || !currentDirectory.exists() || !currentDirectory.isDirectory()) {
+        pathViewList = new ArrayList<>();
+        
+        if (rootDirectory == null || !rootDirectory.exists() || !rootDirectory.isDirectory()) {
             Toast.makeText(this, getString(R.string.str_file_illegal), Toast.LENGTH_SHORT).show();
             setResult(RESULT_CANCELED);
             finishActivity(ObjectDetailActivity.REQ_CODE_SELECT_DIRECTORY);
             return;
         }
         
-        pathViewList = new ArrayList<>();
-        pathViewList.add(new DirectoryView(this, currentDirectory.getAbsolutePath(), "root", 0));
+        pathViewList.add(new DirectoryView(this, rootDirectory.getAbsolutePath(), "root", 0));
+        
+        String latestDirectory = uSharedPreferences.getString(Constants.SpKey.KEY_LATEST_DOWNLOAD_DIRECTORY.name(), "");
+        if (TextUtils.isEmpty(latestDirectory)) {
+            currentDirectory = rootDirectory;
+        } else {
+            currentDirectory = new File(latestDirectory);
+            if (currentDirectory == null || !currentDirectory.exists() || !currentDirectory.isDirectory()) {
+                currentDirectory = rootDirectory;
+            } else {
+                if (!latestDirectory.startsWith(rootDirectory.getAbsolutePath())) {
+                    currentDirectory = rootDirectory;
+                } else {
+                    JLog.T(TAG, "[rootDirectory]:" + rootDirectory);
+                    latestDirectory = latestDirectory.substring(rootDirectory.getAbsolutePath().length());
+                    JLog.T(TAG, "[latestDirectory]:" + latestDirectory);
+                    String[] nodes = latestDirectory.split(File.separator);
+                    String rootPath = rootDirectory.getAbsolutePath();
+                    if (!rootPath.endsWith(File.separator))
+                        rootPath += File.separator;
+                    JLog.T(TAG, "[rootPath]:" + rootPath);
+                    StringBuffer sb = new StringBuffer(rootPath);
+                    int startLen = pathViewList.size();
+                    for (String node : nodes) {
+                        JLog.T(TAG, "[node]:" + node);
+                        if (TextUtils.isEmpty(node))
+                            continue;
+                        sb.append(node + File.separator);
+                        pathViewList.add(new DirectoryView(this, sb.toString(), node, startLen++));
+                    }
+                }
+            }
+        }
     }
     
     @Override
@@ -156,6 +171,7 @@ public class SelectDirectoryActivity extends BaseActivity implements View.OnClic
         } else {
             switch (v.getId()) {
                 case R.id.btn_current_directory: {
+                    uSharedPreferences.edit().putString(Constants.SpKey.KEY_LATEST_DOWNLOAD_DIRECTORY.name(), currentDirectory.getAbsolutePath()).apply();
                     Intent result = new Intent();
                     result.putExtra("directory", currentDirectory);
                     setResult(RESULT_OK, result);
@@ -167,7 +183,7 @@ public class SelectDirectoryActivity extends BaseActivity implements View.OnClic
                             .setTitle(R.string.str_make_directory)
                             .setDefaultContent(R.string.str_directory)
                             .setCancelable(true)
-                            .setDialogInputListener(new InputDialog.DialogInputListener() {
+                            .setOnDialogInputListener(new InputDialog.OnDialogInputListener() {
                                 @Override
                                 public void onFinish(Dialog dialog, CharSequence content) {
                                     dialog.dismiss();
@@ -183,11 +199,11 @@ public class SelectDirectoryActivity extends BaseActivity implements View.OnClic
                                         return;
                                     }
                                     
-                                    currentDirectory = tmp;
-                                    Intent result = new Intent();
-                                    result.putExtra("directory", currentDirectory);
-                                    setResult(RESULT_OK, result);
-                                    finish();
+                                    DirectoryView dv = new DirectoryView(SelectDirectoryActivity.this, tmp.getAbsolutePath(), tmp.getName(), pathViewList.size());
+                                    dv.setOnClickListener(SelectDirectoryActivity.this);
+                                    pathViewList.add(dv);
+                                    scroll_view_directory_path.addView(dv, dv.getDirectoryIndex());
+                                    refreshList(tmp);
                                 }
                                 
                                 @Override

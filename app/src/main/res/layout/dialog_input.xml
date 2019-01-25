@@ -14,7 +14,8 @@
         android:layout_alignParentTop="true"
         android:layout_margin="8dp"
         android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/edit_input"
