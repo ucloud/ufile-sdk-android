@@ -13,7 +13,7 @@
 
 ## 环境要求
 - JDK: 1.8或以上
-- Android Demo: API Level 14 (Android 4.0)
+- Android Demo: API Level 14 (Android 4.0) 或以上
 
 ## 快速安装
 您可以clone源码后，在Android Studio中编译并打包安装，也可以直接下载[UfileSdkDemo.apk](http://ucloud-apk.cn-sh2.ufileos.com/UfileSdkDemo.apk)安装
