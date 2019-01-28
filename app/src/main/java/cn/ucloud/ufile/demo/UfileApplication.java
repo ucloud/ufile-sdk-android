@@ -6,6 +6,8 @@ import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 
+import cn.ucloud.ufile.demo.data.USharedPreferenceHolder;
+
 /**
  * Created by joshua on 2019/1/16 18:25.
  * Company: UCloud
@@ -18,6 +20,7 @@ public class UfileApplication extends Application {
     
     public UfileApplication() {
         mApp = this;
+        USharedPreferenceHolder.createHolder(this);
     }
     
     static {

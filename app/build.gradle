@@ -9,10 +9,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        buildConfigField('String', 'PUBLIC_KEY', toJavaCodeString(PUBLIC_KEY))
-        buildConfigField('String', 'AUTH_URL', toJavaCodeString(AUTH_URL))
-        buildConfigField('String', 'AUTH_PRIVATE_DOWNLOAD_URL', toJavaCodeString(AUTH_PRIVATE_DOWNLOAD_URL))
     }
     buildTypes {
         release {

@@ -5,7 +5,7 @@
     <string name="nav_header_title">UCloud Ufile SDK</string>
     <string name="nav_header_subtitle">https://github.com/ucloud/ufile-sdk-android</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Setting</string>
+    <string name="action_edit_auth_server">编辑远程签名服务</string>
 
     <!-- app string -->
     <string name="str_object_list">对象列表</string>
@@ -64,9 +64,15 @@
     <string name="str_title_of_stream">字符流标题</string>
     <string name="str_defualt_title_of_stream">字符流</string>
 
+    <string name="str_public_key">公钥</string>
+    <string name="str_apply_auth_server">签名服务</string>
+    <string name="str_apply_private_download_url_auth_server">私有下载授权签名服务</string>
+    <string name="str_save">保存</string>
+    <string name="str_quit">退出</string>
+
     <!-- alert -->
-    <string name="alert_no_public_key">您未配置公钥！\n请在&#034;gradle.properties&#034;中配置</string>
-    <string name="alert_no_auth_server_url">您未配置签名服务API地址！\n请在&#034;gradle.properties&#034;中配置</string>
+    <string name="alert_no_public_key">您未配置公钥！</string>
+    <string name="alert_no_auth_server_url">您未配置签名服务API地址！</string>
     <string name="alert_input_bucket">请输入仓库名称</string>
     <string name="alert_select_region">请选择仓库所属地区</string>
     <string name="alert_input_proxy_suffix">请输入域名后缀</string>

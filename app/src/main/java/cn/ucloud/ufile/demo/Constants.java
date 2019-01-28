@@ -7,6 +7,9 @@ package cn.ucloud.ufile.demo;
  */
 public class Constants {
     public enum SpKey {
+        KEY_PUBLIC_KEY,
+        KEY_APPLY_AUTH_URL,
+        KEY_APPLY_PRIVATE_AUTH_URL,
         KEY_REGION,
         KEY_PROXY_SUFFIX,
         KEY_DEFAULT_BUCKET,
@@ -14,9 +17,6 @@ public class Constants {
         KEY_LATEST_UPLOAD_DIRECTORY,
     }
     
-    public static final String PUBLIC_KEY = BuildConfig.PUBLIC_KEY;
-    public static final String AUTH_URL = BuildConfig.AUTH_URL;
-    public static final String AUTH_PRIVATE_DOWNLOAD_URL = BuildConfig.AUTH_PRIVATE_DOWNLOAD_URL;
     public static final String DEFAULT_DOMAIN_PROXY_SUFFIX = "ufileos.com";
     
     public static final int REQ_CODE_WRITE_READ_STORAGE = 0x1000;

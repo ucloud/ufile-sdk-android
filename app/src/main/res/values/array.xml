@@ -51,4 +51,9 @@
         <item>afr-nigeria</item>
         <item>vn-sng</item>
     </string-array>
+
+    <string-array name="http_protocol">
+        <item>http://</item>
+        <item>https://</item>
+    </string-array>
 </resources>

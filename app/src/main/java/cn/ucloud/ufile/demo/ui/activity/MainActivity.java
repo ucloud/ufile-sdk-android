@@ -13,6 +13,8 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -59,18 +61,12 @@ public class MainActivity extends BaseActivity
         implements View.OnClickListener, AdapterView.OnItemSelectedListener, OnRefreshLoadMoreListener, AdapterView.OnItemClickListener {
     private final String TAG = getClass().getSimpleName();
     
-    static {
-        cn.ucloud.ufile.util.JLog.SHOW_TEST = true;
-    }
-    
     private String[] permissions = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     
-    private ViewGroup layout_region_select;
     private AppCompatEditText edit_bucket;
-    private TextView txt_region;
     private AppCompatSpinner spinner_region;
     private AppCompatEditText edit_domain_proxy_suffix;
     private AppCompatImageButton btn_refresh;
@@ -130,10 +126,7 @@ public class MainActivity extends BaseActivity
     protected void bindWidget() {
         progressDialog = new ProgressDialog.Builder(this, R.style.DialogNoBgTheme)
                 .setMessage(R.string.str_waiting).setCancelable(true).setOutsideTouchCancelable(false).create();
-        layout_region_select = findViewById(R.id.layout_region_select);
-        layout_region_select.setOnClickListener(this);
         edit_bucket = findViewById(R.id.edit_bucket);
-        txt_region = findViewById(R.id.txt_region);
         spinner_region = findViewById(R.id.spinner_region);
         spinner_region.setOnItemSelectedListener(this);
         edit_domain_proxy_suffix = findViewById(R.id.edit_domain_proxy_suffix);
@@ -154,7 +147,7 @@ public class MainActivity extends BaseActivity
     
     @Override
     protected void initData() {
-        uSharedPreferences = USharedPreferenceHolder.createHolder(getApplicationContext()).getSharedPreferences();
+        uSharedPreferences = USharedPreferenceHolder.getHolder().getSharedPreferences();
         regionValues = getResources().getStringArray(R.array.regions_value);
         region = uSharedPreferences.getString(Constants.SpKey.KEY_REGION.name(), null);
         proxySuffix = uSharedPreferences.getString(Constants.SpKey.KEY_PROXY_SUFFIX.name(), proxySuffix);
@@ -171,7 +164,7 @@ public class MainActivity extends BaseActivity
         
         edit_bucket.setText(bucketName);
         if (TextUtils.isEmpty(region)) {
-            txt_region.setText("");
+            spinner_region.setPrompt(getString(R.string.str_region));
         } else {
             for (int i = 0, size = regionValues.length; i < size; i++) {
                 if (TextUtils.equals(regionValues[i], region)) {
@@ -181,39 +174,43 @@ public class MainActivity extends BaseActivity
             }
         }
         edit_domain_proxy_suffix.setText(proxySuffix);
-        refresh_layout_object_list.autoRefresh();
     }
     
     private boolean checkData() {
-        if (TextUtils.isEmpty(Constants.PUBLIC_KEY)) {
-            AlertDialog alert = new AlertDialog.Builder(MainActivity.this)
+        authorization = null;
+        String publicKey = uSharedPreferences.getString(Constants.SpKey.KEY_PUBLIC_KEY.name(), null);
+        if (TextUtils.isEmpty(publicKey)) {
+            new AlertDialog.Builder(MainActivity.this)
                     .setTitle(R.string.str_error)
                     .setMessage(R.string.alert_no_public_key)
                     .setPositiveButton(R.string.str_got_it, (dialog, which) -> {
                         dialog.dismiss();
+                        startActivity(EditAuthServerActivity.startAction(MainActivity.this, false));
                         finish();
-                    }).create();
-            alert.setCancelable(false);
-            alert.show();
+                    })
+                    .setCancelable(false)
+                    .show();
             return false;
         }
         
-        if (TextUtils.isEmpty(Constants.AUTH_URL) || TextUtils.isEmpty(Constants.AUTH_PRIVATE_DOWNLOAD_URL)) {
-            AlertDialog alert = new AlertDialog.Builder(MainActivity.this)
+        String authUrl = uSharedPreferences.getString(Constants.SpKey.KEY_APPLY_AUTH_URL.name(), null);
+        String authPrivateUrl = uSharedPreferences.getString(Constants.SpKey.KEY_APPLY_PRIVATE_AUTH_URL.name(), null);
+        
+        if (TextUtils.isEmpty(authUrl) || TextUtils.isEmpty(authPrivateUrl)) {
+            new AlertDialog.Builder(MainActivity.this)
                     .setTitle(R.string.str_error)
                     .setMessage(R.string.alert_no_auth_server_url)
                     .setPositiveButton(R.string.str_got_it, (dialog, which) -> {
                         dialog.dismiss();
+                        startActivity(EditAuthServerActivity.startAction(MainActivity.this, false));
                         finish();
-                    }).create();
-            alert.setCancelable(false);
-            alert.show();
+                    })
+                    .setCancelable(false)
+                    .show();
             return false;
         }
         
-        authorization = new UfileObjectRemoteAuthorization(Constants.PUBLIC_KEY, new ObjectRemoteAuthorization.ApiConfig(
-                Constants.AUTH_URL, Constants.AUTH_PRIVATE_DOWNLOAD_URL
-        ));
+        authorization = new UfileObjectRemoteAuthorization(publicKey, new ObjectRemoteAuthorization.ApiConfig(authUrl, authPrivateUrl));
         return true;
     }
     
@@ -226,16 +223,33 @@ public class MainActivity extends BaseActivity
             needRefresh = true;
             return;
         }
-        initUI();
+        
+        if (authorization != null)
+            refresh_layout_object_list.autoRefresh();
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit_auth_server: {
+                startActivity(EditAuthServerActivity.startAction(MainActivity.this, true));
+                finish();
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
     
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.layout_region_select: {
-                spinner_region.performClick();
-                break;
-            }
             case R.id.btn_refresh: {
                 hideSoftInput();
                 saveBucketConfig();
@@ -346,7 +360,6 @@ public class MainActivity extends BaseActivity
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         region = regionValues[position];
-        txt_region.setText(region);
     }
     
     @Override
@@ -356,7 +369,6 @@ public class MainActivity extends BaseActivity
     
     private void saveBucketConfig() {
         bucketName = edit_bucket.getText().toString().trim();
-        region = txt_region.getText().toString().trim();
         proxySuffix = edit_domain_proxy_suffix.getText().toString().trim();
         uSharedPreferences.edit().putString(Constants.SpKey.KEY_DEFAULT_BUCKET.name(), bucketName)
                 .putString(Constants.SpKey.KEY_REGION.name(), region)
@@ -411,6 +423,7 @@ public class MainActivity extends BaseActivity
     @Override
     public void onRefresh(RefreshLayout refreshLayout) {
         if (TextUtils.isEmpty(bucketName)) {
+            refresh_layout_object_list.finishRefresh();
             new AlertDialog.Builder(MainActivity.this)
                     .setTitle(R.string.str_error)
                     .setMessage(R.string.alert_input_bucket)
@@ -420,6 +433,7 @@ public class MainActivity extends BaseActivity
             return;
         }
         if (TextUtils.isEmpty(region)) {
+            refresh_layout_object_list.finishRefresh();
             new AlertDialog.Builder(MainActivity.this)
                     .setTitle(R.string.str_error)
                     .setMessage(R.string.alert_select_region)
@@ -429,6 +443,7 @@ public class MainActivity extends BaseActivity
             return;
         }
         if (TextUtils.isEmpty(proxySuffix)) {
+            refresh_layout_object_list.finishRefresh();
             new AlertDialog.Builder(MainActivity.this)
                     .setTitle(R.string.str_error)
                     .setMessage(R.string.alert_input_proxy_suffix)

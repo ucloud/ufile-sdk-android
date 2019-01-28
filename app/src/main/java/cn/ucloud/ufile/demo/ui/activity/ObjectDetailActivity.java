@@ -113,8 +113,11 @@ public class ObjectDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void initData() {
         uSharedPreferences = USharedPreferenceHolder.getHolder().getSharedPreferences();
-        authorization = new UfileObjectRemoteAuthorization(Constants.PUBLIC_KEY, new ObjectRemoteAuthorization.ApiConfig(
-                Constants.AUTH_URL, Constants.AUTH_PRIVATE_DOWNLOAD_URL));
+        String publicKey = uSharedPreferences.getString(Constants.SpKey.KEY_PUBLIC_KEY.name(), null);
+        String authUrl = uSharedPreferences.getString(Constants.SpKey.KEY_APPLY_AUTH_URL.name(), null);
+        String authPrivateUrl = uSharedPreferences.getString(Constants.SpKey.KEY_APPLY_PRIVATE_AUTH_URL.name(), null);
+        
+        authorization = new UfileObjectRemoteAuthorization(publicKey, new ObjectRemoteAuthorization.ApiConfig(authUrl, authPrivateUrl));
         objectConfig = new ObjectConfig(uSharedPreferences.getString(Constants.SpKey.KEY_REGION.name(), ""),
                 uSharedPreferences.getString(Constants.SpKey.KEY_PROXY_SUFFIX.name(), ""));
         Intent intent = getIntent();
