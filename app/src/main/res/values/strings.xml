@@ -1,0 +1,81 @@
+<resources>
+    <string name="app_name">UfileSdkDemo</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">UCloud Ufile SDK</string>
+    <string name="nav_header_subtitle">https://github.com/ucloud/ufile-sdk-android</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_edit_auth_server">编辑远程签名服务</string>
+
+    <!-- app string -->
+    <string name="str_object_list">对象列表</string>
+    <string name="str_bucket_list">仓库列表</string>
+    <string name="str_config">配置</string>
+    <string name="str_secret_key">密钥</string>
+    <string name="str_domain">域名</string>
+    <string name="str_default_bucket">默认仓库</string>
+    <string name="str_region">地区</string>
+    <string name="str_domain_proxy_suffix">域名后缀</string>
+    <string name="str_select_key_from">请选择密钥输入来源</string>
+    <string name="str_from_qrcode">二维码</string>
+    <string name="str_from_file">文件导入</string>
+    <string name="str_from_input">手动输入</string>
+    <string name="str_got_it">知道了</string>
+    <string name="str_sure">确定</string>
+    <string name="str_cancel">取消</string>
+    <string name="str_current_bucket_colon">当前仓库: </string>
+    <string name="str_search_empty_data">查询无结果</string>
+    <string name="str_name">名称</string>
+    <string name="str_type_colon">类型:</string>
+    <string name="str_size_colon">大小:</string>
+    <string name="str_bucket_colon">仓库:</string>
+    <string name="str_crete_time_colon">创建时间:</string>
+    <string name="str_modify_time_colon">修改时间:</string>
+    <string name="str_pull_up_load_more">上拉加载更多</string>
+    <string name="str_waiting">请稍后...</string>
+    <string name="str_download">下载</string>
+    <string name="str_delete">删除</string>
+    <string name="str_current_directory">当前文件夹</string>
+    <string name="str_make_directory">新建文件夹</string>
+    <string name="str_directory">文件夹</string>
+    <string name="str_directory_exists">文件夹 \"%1$s\" 已存在！</string>
+    <string name="str_directory_failed">新建文件夹失败！</string>
+    <string name="str_delete_success">删除成功</string>
+    <string name="str_delete_confirm">是否确认将 \"%1$s\" 从 \"%2$s\" 仓库中删除</string>
+    <string name="str_error">错误</string>
+    <string name="str_tips">提示</string>
+    <string name="str_file_illegal">非法的目录文件</string>
+    <string name="str_downloading">正在下载</string>
+    <string name="str_uploading">正在上传</string>
+    <string name="str_download_success">下载成功</string>
+    <string name="str_upload_success">上传成功</string>
+    <string name="str_upload_failed">上传失败</string>
+    <string name="str_upload_multipart_failed_and_abort_failed">上传分片失败，中断操作失败！</string>
+    <string name="str_upload_multipart_success_and_finish_failed">上传分片成功，完成操作失败！</string>
+    <string name="str_upload_multipart_failed_has_aborted">上传分片失败，已中断上传！</string>
+    <string name="str_upload_hit_success">秒传成功</string>
+    <string name="str_is_confirm_upload_file">是否确认上传 \"%1$s\" 到 \"%2$s\" ？</string>
+    <string name="str_doing_multipart_initialization">正在分片初始化</string>
+    <string name="str_select_upload_type">选择上传类型</string>
+    <string name="str_upload_file">上传文件</string>
+    <string name="str_upload_stream">上传字符流</string>
+    <string name="str_please_input">请输入</string>
+    <string name="str_input_what_you_want_to_upload">输入要上传的字符串</string>
+    <string name="str_title_of_stream">字符流标题</string>
+    <string name="str_defualt_title_of_stream">字符流</string>
+
+    <string name="str_public_key">公钥</string>
+    <string name="str_apply_auth_server">签名服务</string>
+    <string name="str_apply_private_download_url_auth_server">私有下载授权签名服务</string>
+    <string name="str_save">保存</string>
+    <string name="str_quit">退出</string>
+
+    <!-- alert -->
+    <string name="alert_no_public_key">您未配置公钥！</string>
+    <string name="alert_no_auth_server_url">您未配置签名服务API地址！</string>
+    <string name="alert_input_bucket">请输入仓库名称</string>
+    <string name="alert_select_region">请选择仓库所属地区</string>
+    <string name="alert_input_proxy_suffix">请输入域名后缀</string>
+    <string name="alert_read_stream_error">读取流数据出错</string>
+    <string name="alert_stream_title_and_content_can_not_be_empty">字节流的标题和内容均不能为空！</string>
+</resources>

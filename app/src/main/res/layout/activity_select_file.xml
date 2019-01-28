@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    android:orientation="vertical">
+
+    <cn.ucloud.ufile.demo.ui.widgets.PathScrollView
+        android:id="@+id/scroll_view_directory_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/white"
+        android:scrollbars="none">
+
+    </cn.ucloud.ufile.demo.ui.widgets.PathScrollView>
+
+    <ListView
+        android:id="@+id/list_file_system"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>

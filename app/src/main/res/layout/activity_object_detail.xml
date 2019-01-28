@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    tools:context=".ui.activity.MainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layout_object_operation"
+        android:layout_alignParentTop="true">
+
+        <include layout="@layout/layout_object_detail_info" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_object_operation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_object_download"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="@drawable/selector_accent_btn_click"
+            android:text="@string/str_download"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btn_object_delete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/selector_accent_btn_click"
+            android:text="@string/str_delete"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_white_card"
+    android:minWidth="200dp"
+    android:minHeight="100dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txt_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_dialog_title"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_upload_file"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:clickable="true"
+            android:gravity="center"
+            android:minHeight="24dp"
+            android:text="@string/str_upload_file"
+            android:textColor="@color/selector_accent_click"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/txt_upload_stream"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:clickable="true"
+            android:gravity="center"
+            android:minHeight="24dp"
+            android:text="@string/str_upload_stream"
+            android:textColor="@color/selector_accent_click"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

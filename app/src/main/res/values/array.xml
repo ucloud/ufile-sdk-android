@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="region_name">
+        <item>北京一</item>
+        <item>北京二</item>
+        <item>上海金融云</item>
+        <item>上海二</item>
+        <item>广州</item>
+        <item>香港</item>
+        <item>洛杉矶</item>
+        <item>华盛顿</item>
+        <item>法兰克福</item>
+        <item>曼谷</item>
+        <item>首尔</item>
+        <item>新加坡</item>
+        <item>台北</item>
+        <item>高雄</item>
+        <item>东京</item>
+        <item>莫斯科</item>
+        <item>迪拜</item>
+        <item>雅加达</item>
+        <item>孟买</item>
+        <item>圣保罗</item>
+        <item>伦敦</item>
+        <item>拉各斯</item>
+        <item>胡志明市</item>
+    </string-array>
+
+    <string-array name="regions_value">
+        <item>cn-bj1</item>
+        <item>cn-bj2</item>
+        <item>cn-sh</item>
+        <item>cn-sh2</item>
+        <item>cn-gd</item>
+        <item>hk</item>
+        <item>us-ca</item>
+        <item>us-ws</item>
+        <item>ge-fra</item>
+        <item>th-bkk</item>
+        <item>kr-seoul</item>
+        <item>sg</item>
+        <item>tw-tp</item>
+        <item>tw-kh</item>
+        <item>jpn-tky</item>
+        <item>rus-mosc</item>
+        <item>uae-dubai</item>
+        <item>idn-jakarta</item>
+        <item>ind-mumbai</item>
+        <item>bra-saopaulo</item>
+        <item>uk-london</item>
+        <item>afr-nigeria</item>
+        <item>vn-sng</item>
+    </string-array>
+
+    <string-array name="http_protocol">
+        <item>http://</item>
+        <item>https://</item>
+    </string-array>
+</resources>
