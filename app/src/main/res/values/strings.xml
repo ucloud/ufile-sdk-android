@@ -43,11 +43,26 @@
     <string name="str_delete_success">删除成功</string>
     <string name="str_delete_confirm">是否确认将 \"%1$s\" 从 \"%2$s\" 仓库中删除</string>
     <string name="str_error">错误</string>
+    <string name="str_tips">提示</string>
     <string name="str_file_illegal">非法的目录文件</string>
     <string name="str_downloading">正在下载</string>
     <string name="str_uploading">正在上传</string>
     <string name="str_download_success">下载成功</string>
     <string name="str_upload_success">上传成功</string>
+    <string name="str_upload_failed">上传失败</string>
+    <string name="str_upload_multipart_failed_and_abort_failed">上传分片失败，中断操作失败！</string>
+    <string name="str_upload_multipart_success_and_finish_failed">上传分片成功，完成操作失败！</string>
+    <string name="str_upload_multipart_failed_has_aborted">上传分片失败，已中断上传！</string>
+    <string name="str_upload_hit_success">秒传成功</string>
+    <string name="str_is_confirm_upload_file">是否确认上传 \"%1$s\" 到 \"%2$s\" ？</string>
+    <string name="str_doing_multipart_initialization">正在分片初始化</string>
+    <string name="str_select_upload_type">选择上传类型</string>
+    <string name="str_upload_file">上传文件</string>
+    <string name="str_upload_stream">上传字符流</string>
+    <string name="str_please_input">请输入</string>
+    <string name="str_input_what_you_want_to_upload">输入要上传的字符串</string>
+    <string name="str_title_of_stream">字符流标题</string>
+    <string name="str_defualt_title_of_stream">字符流</string>
 
     <!-- alert -->
     <string name="alert_no_public_key">您未配置公钥！\n请在&#034;gradle.properties&#034;中配置</string>
@@ -55,4 +70,6 @@
     <string name="alert_input_bucket">请输入仓库名称</string>
     <string name="alert_select_region">请选择仓库所属地区</string>
     <string name="alert_input_proxy_suffix">请输入域名后缀</string>
+    <string name="alert_read_stream_error">读取流数据出错</string>
+    <string name="alert_stream_title_and_content_can_not_be_empty">字节流的标题和内容均不能为空！</string>
 </resources>

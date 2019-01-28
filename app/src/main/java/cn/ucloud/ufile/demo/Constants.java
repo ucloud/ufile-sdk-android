@@ -11,10 +11,13 @@ public class Constants {
         KEY_PROXY_SUFFIX,
         KEY_DEFAULT_BUCKET,
         KEY_LATEST_DOWNLOAD_DIRECTORY,
+        KEY_LATEST_UPLOAD_DIRECTORY,
     }
     
     public static final String PUBLIC_KEY = BuildConfig.PUBLIC_KEY;
     public static final String AUTH_URL = BuildConfig.AUTH_URL;
     public static final String AUTH_PRIVATE_DOWNLOAD_URL = BuildConfig.AUTH_PRIVATE_DOWNLOAD_URL;
     public static final String DEFAULT_DOMAIN_PROXY_SUFFIX = "ufileos.com";
+    
+    public static final int REQ_CODE_WRITE_READ_STORAGE = 0x1000;
 }

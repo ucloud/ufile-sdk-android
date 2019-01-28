@@ -126,7 +126,7 @@ public class DownloadDialog extends BaseDialog {
                         public void onError(Request request, ApiError error, UfileErrorBean response) {
                             handler.post(() -> {
                                 if (onDownloadDialogListener != null)
-                                    onDownloadDialogListener.onFailed(DownloadDialog.this, response == null ? error.toString() : response.getErrMsg());
+                                    onDownloadDialogListener.onFailed(DownloadDialog.this, response == null ? error.toString() : response.toString());
                             });
                         }
                     });
@@ -167,7 +167,7 @@ public class DownloadDialog extends BaseDialog {
                                         public void onError(Request request, ApiError error, UfileErrorBean response) {
                                             handler.post(() -> {
                                                 if (onDownloadDialogListener != null)
-                                                    onDownloadDialogListener.onFailed(DownloadDialog.this, response == null ? error.toString() : response.getErrMsg());
+                                                    onDownloadDialogListener.onFailed(DownloadDialog.this, response == null ? error.toString() : response.toString());
                                                 
                                             });
                                         }
@@ -203,7 +203,7 @@ public class DownloadDialog extends BaseDialog {
                                             public void onError(Request request, ApiError error, UfileErrorBean response) {
                                                 handler.post(() -> {
                                                     if (onDownloadDialogListener != null)
-                                                        onDownloadDialogListener.onFailed(DownloadDialog.this, response == null ? error.toString() : response.getErrMsg());
+                                                        onDownloadDialogListener.onFailed(DownloadDialog.this, response == null ? error.toString() : response.toString());
                                                     
                                                 });
                                             }

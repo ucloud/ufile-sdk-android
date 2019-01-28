@@ -46,10 +46,6 @@ import okhttp3.Request;
  * E-mail: joshua.yin@ucloud.cn
  */
 public class ObjectDetailActivity extends BaseActivity implements View.OnClickListener {
-    public static final int REQ_CODE_SELECT_DIRECTORY = 0x2000;
-    
-    private final int REQ_CODE_WRITE_READ_STORAGE = 0x1000;
-    
     private USharedPreferenceHolder.USharedPreferences uSharedPreferences;
     
     private TextView txt_object_detail_name, txt_object_detail_bucket, txt_object_detail_mimetype, txt_object_detail_size,
@@ -72,9 +68,8 @@ public class ObjectDetailActivity extends BaseActivity implements View.OnClickLi
     
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        
         switch (requestCode) {
-            case REQ_CODE_WRITE_READ_STORAGE: {
+            case Constants.REQ_CODE_WRITE_READ_STORAGE: {
                 if (permissions == null || permissions.length == 0)
                     return;
                 
@@ -82,7 +77,7 @@ public class ObjectDetailActivity extends BaseActivity implements View.OnClickLi
                     if (TextUtils.equals(permissions[i], Manifest.permission.READ_EXTERNAL_STORAGE)) {
                         if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                             rootDirectory = Environment.getExternalStorageDirectory();
-                            startActivityForResult(SelectDirectoryActivity.startAction(this, rootDirectory), REQ_CODE_SELECT_DIRECTORY);
+                            startActivityForResult(SelectDirectoryActivity.startAction(this, rootDirectory), SelectDirectoryActivity.REQ_CODE_SELECT_DIRECTORY);
                             return;
                         }
                     }
@@ -158,9 +153,9 @@ public class ObjectDetailActivity extends BaseActivity implements View.OnClickLi
             case R.id.btn_object_download: {
                 if (PermissionUtil.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     rootDirectory = Environment.getExternalStorageDirectory();
-                    startActivityForResult(SelectDirectoryActivity.startAction(this, rootDirectory), REQ_CODE_SELECT_DIRECTORY);
+                    startActivityForResult(SelectDirectoryActivity.startAction(this, rootDirectory), SelectDirectoryActivity.REQ_CODE_SELECT_DIRECTORY);
                 } else {
-                    PermissionUtil.requestPermissions(this, permissions, REQ_CODE_WRITE_READ_STORAGE);
+                    PermissionUtil.requestPermissions(this, permissions, Constants.REQ_CODE_WRITE_READ_STORAGE);
                 }
                 break;
             }
@@ -207,7 +202,7 @@ public class ObjectDetailActivity extends BaseActivity implements View.OnClickLi
                             progressDialog.dismiss();
                             new AlertDialog.Builder(ObjectDetailActivity.this)
                                     .setTitle(R.string.str_error)
-                                    .setMessage(response == null ? error.toString() : response.getErrMsg())
+                                    .setMessage(response == null ? error.toString() : response.toString())
                                     .setPositiveButton(R.string.str_got_it, (dialog, which) -> dialog.dismiss())
                                     .setCancelable(false)
                                     .create().show();
@@ -219,7 +214,7 @@ public class ObjectDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
-            case REQ_CODE_SELECT_DIRECTORY: {
+            case SelectDirectoryActivity.REQ_CODE_SELECT_DIRECTORY: {
                 if (resultCode != RESULT_OK)
                     return;
                 
@@ -276,7 +271,7 @@ public class ObjectDetailActivity extends BaseActivity implements View.OnClickLi
                             progressDialog.dismiss();
                             new AlertDialog.Builder(ObjectDetailActivity.this)
                                     .setTitle(R.string.str_error)
-                                    .setMessage(response == null ? error.toString() : response.getErrMsg())
+                                    .setMessage(response == null ? error.toString() : response.toString())
                                     .setPositiveButton(R.string.str_got_it, (dialog, which) -> dialog.dismiss())
                                     .setCancelable(false)
                                     .create().show();

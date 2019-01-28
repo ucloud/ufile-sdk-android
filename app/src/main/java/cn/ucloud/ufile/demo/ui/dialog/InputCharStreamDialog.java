@@ -17,36 +17,38 @@ import cn.ucloud.ufile.demo.R;
  * Company: UCloud
  * E-mail: joshua.yin@ucloud.cn
  */
-public class InputDialog extends BaseDialog implements View.OnClickListener {
+public class InputCharStreamDialog extends BaseDialog implements View.OnClickListener {
     private TextView txt_dialog_title;
-    private AppCompatEditText edit_input;
+    private AppCompatEditText edit_input_name;
+    private AppCompatEditText edit_input_content;
     private TextView txt_dialog_cancel, txt_dialog_ok;
     
     private String title, content, hint;
     
-    private OnDialogInputListener onDialogInputListener;
+    private OnDialogInputCharStreamListener onDialogInputCharStreamListener;
     
-    private InputDialog(@NonNull Context context) {
+    private InputCharStreamDialog(@NonNull Context context) {
         super(context);
     }
     
-    private InputDialog(@NonNull Context context, int themeResId) {
+    private InputCharStreamDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
     }
     
-    private InputDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
+    private InputCharStreamDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
     }
     
     @Override
     protected int getContentViewId() {
-        return R.layout.dialog_input;
+        return R.layout.dialog_input_char_stream;
     }
     
     @Override
     protected void bindWidget() {
         txt_dialog_title = findViewById(R.id.txt_dialog_title);
-        edit_input = findViewById(R.id.edit_input);
+        edit_input_name = findViewById(R.id.edit_input_name);
+        edit_input_content = findViewById(R.id.edit_input_content);
         txt_dialog_cancel = findViewById(R.id.txt_dialog_cancel);
         txt_dialog_ok = findViewById(R.id.txt_dialog_ok);
         
@@ -64,8 +66,8 @@ public class InputDialog extends BaseDialog implements View.OnClickListener {
         this.title = title == null ? null : title.toString();
     }
     
-    public void setOnDialogInputListener(OnDialogInputListener onDialogInputListener) {
-        this.onDialogInputListener = onDialogInputListener;
+    public void setOnDialogInputCharStreamListener(OnDialogInputCharStreamListener onDialogInputCharStreamListener) {
+        this.onDialogInputCharStreamListener = onDialogInputCharStreamListener;
     }
     
     public void setContent(String content) {
@@ -86,30 +88,30 @@ public class InputDialog extends BaseDialog implements View.OnClickListener {
             txt_dialog_title.setText(title);
         }
         
-        edit_input.setHint(hint == null ? "" : hint);
-        edit_input.setText(content == null ? "" : content);
-        edit_input.setSelection(edit_input.getText().length());
+        edit_input_content.setHint(hint == null ? "" : hint);
+        edit_input_content.setText(content == null ? "" : content);
+        edit_input_content.setSelection(edit_input_content.getText().length());
     }
     
     @Override
     public void onClick(View v) {
-        if (onDialogInputListener == null)
+        if (onDialogInputCharStreamListener == null)
             return;
         
         switch (v.getId()) {
             case R.id.txt_dialog_cancel: {
-                onDialogInputListener.onCancel(this);
+                onDialogInputCharStreamListener.onCancel(this);
                 break;
             }
             case R.id.txt_dialog_ok: {
-                onDialogInputListener.onFinish(this, edit_input.getText().toString());
+                onDialogInputCharStreamListener.onFinish(this, edit_input_name.getText().toString(), edit_input_content.getText().toString());
                 break;
             }
         }
     }
     
-    public interface OnDialogInputListener {
-        void onFinish(Dialog dialog, CharSequence content);
+    public interface OnDialogInputCharStreamListener {
+        void onFinish(Dialog dialog, CharSequence title, CharSequence content);
         
         void onCancel(Dialog dialog);
     }
@@ -119,7 +121,7 @@ public class InputDialog extends BaseDialog implements View.OnClickListener {
         private Integer themeResId;
         private String title, defaultContent, hint;
         private boolean isCancelable, isOutsideTouchCancelable;
-        private OnDialogInputListener onDialogInputListener;
+        private OnDialogInputCharStreamListener onDialogInputListener;
         
         public Builder(Context context) {
             this.context = context;
@@ -168,19 +170,19 @@ public class InputDialog extends BaseDialog implements View.OnClickListener {
             return this;
         }
         
-        public Builder setOnDialogInputListener(OnDialogInputListener onDialogInputListener) {
+        public Builder setOnDialogInputListener(OnDialogInputCharStreamListener onDialogInputListener) {
             this.onDialogInputListener = onDialogInputListener;
             return this;
         }
         
-        public InputDialog create() {
-            InputDialog dialog = themeResId == null ? new InputDialog(context) : new InputDialog(context, themeResId);
+        public InputCharStreamDialog create() {
+            InputCharStreamDialog dialog = themeResId == null ? new InputCharStreamDialog(context) : new InputCharStreamDialog(context, themeResId);
             dialog.title = title;
             dialog.content = defaultContent;
             dialog.hint = hint;
             dialog.setCanceledOnTouchOutside(isOutsideTouchCancelable);
             dialog.setCancelable(isCancelable);
-            dialog.onDialogInputListener = onDialogInputListener;
+            dialog.onDialogInputCharStreamListener = onDialogInputListener;
             
             return dialog;
         }

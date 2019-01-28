@@ -8,19 +8,36 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/img_file_icon"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_margin="8dp"
         android:scaleType="centerInside" />
 
-    <TextView
-        android:id="@+id/txt_file_name"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:ellipsize="marquee"
-        android:gravity="left|center_vertical"
-        android:singleLine="true"
-        android:textSize="14sp" />
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_file_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:gravity="left|center_vertical"
+            android:singleLine="true"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/txt_file_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:ellipsize="marquee"
+            android:gravity="left|center_vertical"
+            android:singleLine="true"
+            android:textSize="10sp" />
+    </LinearLayout>
 
 </LinearLayout>

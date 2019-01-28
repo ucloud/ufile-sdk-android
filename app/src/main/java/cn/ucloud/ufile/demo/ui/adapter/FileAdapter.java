@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import cn.ucloud.ufile.demo.R;
+import cn.ucloud.ufile.demo.utils.FileUtil;
 
 /**
  * Created by joshua on 2019/1/14 18:45.
@@ -61,8 +62,11 @@ public class FileAdapter extends BaseAdapter {
         final File file = getItem(position);
         if (file.isDirectory()) {
             holder.img_file_icon.setImageResource(R.drawable.img_directory);
+            holder.txt_file_size.setVisibility(View.GONE);
         } else {
             holder.img_file_icon.setImageResource(R.drawable.img_file);
+            holder.txt_file_size.setVisibility(View.VISIBLE);
+            holder.txt_file_size.setText(FileUtil.formatFileSize(file.length()));
         }
         holder.txt_file_name.setText(file.getName());
         
@@ -71,11 +75,12 @@ public class FileAdapter extends BaseAdapter {
     
     private class ViewHolder {
         private AppCompatImageView img_file_icon;
-        private TextView txt_file_name;
+        private TextView txt_file_name, txt_file_size;
         
         private ViewHolder(View view) {
             this.img_file_icon = view.findViewById(R.id.img_file_icon);
             this.txt_file_name = view.findViewById(R.id.txt_file_name);
+            this.txt_file_size = view.findViewById(R.id.txt_file_size);
         }
     }
     

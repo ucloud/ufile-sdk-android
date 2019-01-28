@@ -1,10 +1,10 @@
 package cn.ucloud.ufile.demo.ui.activity;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import cn.ucloud.ufile.demo.Constants;
 import cn.ucloud.ufile.demo.R;
 import cn.ucloud.ufile.demo.data.USharedPreferenceHolder;
 import cn.ucloud.ufile.demo.ui.adapter.FileAdapter;
-import cn.ucloud.ufile.demo.ui.dialog.InputDialog;
 import cn.ucloud.ufile.demo.ui.widgets.DirectoryView;
 import cn.ucloud.ufile.demo.ui.widgets.PathScrollView;
 import cn.ucloud.ufile.demo.utils.JLog;
@@ -34,8 +32,8 @@ import cn.ucloud.ufile.demo.utils.JLog;
  * Company: UCloud
  * E-mail: joshua.yin@ucloud.cn
  */
-public class SelectDirectoryActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
-    public static final int REQ_CODE_SELECT_DIRECTORY = 0x2000;
+public class SelectFileActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+    public static final int REQ_CODE_SELECT_FILE = 0x2001;
     
     private PathScrollView scroll_view_directory_path;
     private ListView list_file_system;
@@ -44,10 +42,11 @@ public class SelectDirectoryActivity extends BaseActivity implements View.OnClic
     private File rootDirectory, currentDirectory;
     private List<DirectoryView> pathViewList;
     private FileAdapter adapter;
+    private String bucketName;
     
     @Override
     protected int getContentViewId() {
-        return R.layout.activity_select_directory;
+        return R.layout.activity_select_file;
     }
     
     @Override
@@ -60,9 +59,6 @@ public class SelectDirectoryActivity extends BaseActivity implements View.OnClic
         adapter = new FileAdapter(this);
         list_file_system.setAdapter(adapter);
         list_file_system.setOnItemClickListener(this);
-        
-        findViewById(R.id.btn_current_directory).setOnClickListener(this);
-        findViewById(R.id.btn_make_directory).setOnClickListener(this);
     }
     
     @Override
@@ -82,10 +78,13 @@ public class SelectDirectoryActivity extends BaseActivity implements View.OnClic
     protected void initData() {
         uSharedPreferences = USharedPreferenceHolder.getHolder().getSharedPreferences();
         Intent intent = getIntent();
-        if (intent != null)
+        if (intent != null) {
             rootDirectory = (File) intent.getSerializableExtra("rootDirectory");
-        else
+            bucketName = intent.getStringExtra("bucketName");
+        } else {
             rootDirectory = Environment.getExternalStorageDirectory();
+            bucketName = "";
+        }
         
         pathViewList = new ArrayList<>();
         
@@ -98,7 +97,7 @@ public class SelectDirectoryActivity extends BaseActivity implements View.OnClic
         
         pathViewList.add(new DirectoryView(this, rootDirectory.getAbsolutePath(), "root", 0));
         
-        String latestDirectory = uSharedPreferences.getString(Constants.SpKey.KEY_LATEST_DOWNLOAD_DIRECTORY.name(), "");
+        String latestDirectory = uSharedPreferences.getString(Constants.SpKey.KEY_LATEST_UPLOAD_DIRECTORY.name(), "");
         
         if (TextUtils.isEmpty(latestDirectory)) {
             currentDirectory = rootDirectory;
@@ -141,9 +140,10 @@ public class SelectDirectoryActivity extends BaseActivity implements View.OnClic
         }
     }
     
-    public static Intent startAction(Context context, File rootDirectory) {
-        Intent intent = new Intent(context, SelectDirectoryActivity.class);
+    public static Intent startAction(Context context, File rootDirectory, String bucketName) {
+        Intent intent = new Intent(context, SelectFileActivity.class);
         intent.putExtra("rootDirectory", rootDirectory);
+        intent.putExtra("bucketName", bucketName);
         return intent;
     }
     
@@ -162,67 +162,31 @@ public class SelectDirectoryActivity extends BaseActivity implements View.OnClic
             pathViewList.removeAll(deleteList);
             
             refreshList(new File(dv.getAbsolutePath()));
-        } else {
-            switch (v.getId()) {
-                case R.id.btn_current_directory: {
-                    uSharedPreferences.edit().putString(Constants.SpKey.KEY_LATEST_DOWNLOAD_DIRECTORY.name(), currentDirectory.getAbsolutePath()).apply();
-                    Intent result = new Intent();
-                    result.putExtra("directory", currentDirectory);
-                    setResult(RESULT_OK, result);
-                    finish();
-                    break;
-                }
-                case R.id.btn_make_directory: {
-                   new InputDialog.Builder(this, R.style.DialogNoBgTheme)
-                            .setTitle(R.string.str_make_directory)
-                            .setDefaultContent(R.string.str_directory)
-                            .setCancelable(true)
-                            .setOnDialogInputListener(new InputDialog.OnDialogInputListener() {
-                                @Override
-                                public void onFinish(Dialog dialog, CharSequence content) {
-                                    dialog.dismiss();
-                                    File tmp = new File(currentDirectory.getAbsolutePath() + File.separator + content);
-                                    if (tmp.exists() && tmp.isDirectory()) {
-                                        Toast.makeText(SelectDirectoryActivity.this,
-                                                String.format(getString(R.string.str_directory_exists), content), Toast.LENGTH_SHORT).show();
-                                        return;
-                                    }
-                                    
-                                    if (!tmp.mkdirs()) {
-                                        Toast.makeText(SelectDirectoryActivity.this, R.string.str_directory_failed, Toast.LENGTH_SHORT).show();
-                                        return;
-                                    }
-                                    
-                                    DirectoryView dv = new DirectoryView(SelectDirectoryActivity.this, tmp.getAbsolutePath(), tmp.getName(), pathViewList.size());
-                                    dv.setOnClickListener(SelectDirectoryActivity.this);
-                                    pathViewList.add(dv);
-                                    scroll_view_directory_path.addView(dv, dv.getDirectoryIndex());
-                                    refreshList(tmp);
-                                }
-                                
-                                @Override
-                                public void onCancel(Dialog dialog) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .create().show();
-                    break;
-                }
-            }
         }
     }
     
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         File file = adapter.getItem(position);
-        if (!file.isDirectory())
-            return;
-        
-        DirectoryView dv = new DirectoryView(this, file.getAbsolutePath(), file.getName(), pathViewList.size());
-        dv.setOnClickListener(this);
-        pathViewList.add(dv);
-        scroll_view_directory_path.addView(dv, dv.getDirectoryIndex());
-        refreshList(file);
+        if (file.isDirectory()) {
+            DirectoryView dv = new DirectoryView(this, file.getAbsolutePath(), file.getName(), pathViewList.size());
+            dv.setOnClickListener(this);
+            pathViewList.add(dv);
+            scroll_view_directory_path.addView(dv, dv.getDirectoryIndex());
+            refreshList(file);
+        } else {
+            new AlertDialog.Builder(this)
+                    .setMessage(String.format(getString(R.string.str_is_confirm_upload_file), file.getName(), bucketName))
+                    .setPositiveButton(R.string.str_sure, (dialog, which) -> {
+                        dialog.dismiss();
+                        uSharedPreferences.edit().putString(Constants.SpKey.KEY_LATEST_UPLOAD_DIRECTORY.name(), currentDirectory.getAbsolutePath()).apply();
+                        Intent result = new Intent();
+                        result.putExtra("file", file);
+                        setResult(RESULT_OK, result);
+                        finish();
+                    })
+                    .setNegativeButton(R.string.str_cancel, (dialog, which) -> dialog.dismiss()).show();
+        }
     }
     
     private void refreshList(File file) {
