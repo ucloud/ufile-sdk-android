@@ -6,4 +6,9 @@
         android:orderInCategory="100"
         android:title="@string/action_edit_auth_server"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_edit_domain_bucket"
+        android:orderInCategory="100"
+        android:title="@string/action_edit_domain_bucket"
+        app:showAsAction="never" />
 </menu>

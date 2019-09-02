@@ -7,6 +7,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 
 import cn.ucloud.ufile.demo.data.USharedPreferenceHolder;
+import cn.ucloud.ufile.util.JLog;
 
 /**
  * Created by joshua on 2019/1/16 18:25.
@@ -20,6 +21,8 @@ public class UfileApplication extends Application {
     
     public UfileApplication() {
         mApp = this;
+        JLog.SHOW_DEBUG = true;
+        JLog.SHOW_TEST = true;
         USharedPreferenceHolder.createHolder(this);
     }
     

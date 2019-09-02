@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="region_name">
-        <item>北京一</item>
-        <item>北京二</item>
+        <item>北京</item>
         <item>上海金融云</item>
         <item>上海二</item>
         <item>广州</item>
@@ -27,8 +26,7 @@
     </string-array>
 
     <string-array name="regions_value">
-        <item>cn-bj1</item>
-        <item>cn-bj2</item>
+        <item>cn-bj</item>
         <item>cn-sh</item>
         <item>cn-sh2</item>
         <item>cn-gd</item>

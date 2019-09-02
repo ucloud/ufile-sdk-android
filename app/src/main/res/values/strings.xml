@@ -6,6 +6,7 @@
     <string name="nav_header_subtitle">https://github.com/ucloud/ufile-sdk-android</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_edit_auth_server">编辑远程签名服务</string>
+    <string name="action_edit_domain_bucket">编辑域名和仓库</string>
 
     <!-- app string -->
     <string name="str_object_list">对象列表</string>
@@ -28,6 +29,9 @@
     <string name="str_name">名称</string>
     <string name="str_type_colon">类型:</string>
     <string name="str_size_colon">大小:</string>
+    <string name="str_custom_domain">自定义域名</string>
+    <string name="str_normal_domain">常规地区域名</string>
+    <string name="str_bucket">仓库</string>
     <string name="str_bucket_colon">仓库:</string>
     <string name="str_crete_time_colon">创建时间:</string>
     <string name="str_modify_time_colon">修改时间:</string>
@@ -65,12 +69,16 @@
     <string name="str_defualt_title_of_stream">字符流</string>
 
     <string name="str_public_key">公钥</string>
+    <string name="str_domain_type">域名类型</string>
     <string name="str_apply_auth_server">签名服务</string>
     <string name="str_apply_private_download_url_auth_server">私有下载授权签名服务</string>
     <string name="str_save">保存</string>
     <string name="str_quit">退出</string>
 
     <!-- alert -->
+    <string name="alert_no_domain_type">您未配置域名类型！</string>
+    <string name="alert_no_proxy_suffix">您未配置域名后缀！</string>
+    <string name="alert_no_custom_domain">您未配置域名！</string>
     <string name="alert_no_public_key">您未配置公钥！</string>
     <string name="alert_no_auth_server_url">您未配置签名服务API地址！</string>
     <string name="alert_input_bucket">请输入仓库名称</string>

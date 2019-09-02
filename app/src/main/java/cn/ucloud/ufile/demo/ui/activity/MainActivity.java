@@ -58,7 +58,7 @@ import okhttp3.Request;
 
 
 public class MainActivity extends BaseActivity
-        implements View.OnClickListener, AdapterView.OnItemSelectedListener, OnRefreshLoadMoreListener, AdapterView.OnItemClickListener {
+        implements View.OnClickListener, OnRefreshLoadMoreListener, AdapterView.OnItemClickListener {
     private final String TAG = getClass().getSimpleName();
     
     private String[] permissions = new String[]{
@@ -67,8 +67,6 @@ public class MainActivity extends BaseActivity
     };
     
     private AppCompatEditText edit_bucket;
-    private AppCompatSpinner spinner_region;
-    private AppCompatEditText edit_domain_proxy_suffix;
     private AppCompatImageButton btn_refresh;
     private TextView txt_current_bucket_name;
     private AppCompatImageButton btn_upload_object;
@@ -81,11 +79,9 @@ public class MainActivity extends BaseActivity
     private List<ObjectInfoBean> data;
     
     private USharedPreferenceHolder.USharedPreferences uSharedPreferences;
-    private String region, proxySuffix = Constants.DEFAULT_DOMAIN_PROXY_SUFFIX;
     private String bucketName = "";
     private String nextMark = "";
     
-    private String[] regionValues;
     private UfileObjectRemoteAuthorization authorization;
     private ObjectConfig objectConfig;
     private ObjectApiBuilder objectApiBuilder;
@@ -127,9 +123,6 @@ public class MainActivity extends BaseActivity
         progressDialog = new ProgressDialog.Builder(this, R.style.DialogNoBgTheme)
                 .setMessage(R.string.str_waiting).setCancelable(true).setOutsideTouchCancelable(false).create();
         edit_bucket = findViewById(R.id.edit_bucket);
-        spinner_region = findViewById(R.id.spinner_region);
-        spinner_region.setOnItemSelectedListener(this);
-        edit_domain_proxy_suffix = findViewById(R.id.edit_domain_proxy_suffix);
         btn_refresh = findViewById(R.id.btn_refresh);
         btn_refresh.setOnClickListener(this);
         txt_current_bucket_name = findViewById(R.id.txt_current_bucket_name);
@@ -148,9 +141,6 @@ public class MainActivity extends BaseActivity
     @Override
     protected void initData() {
         uSharedPreferences = USharedPreferenceHolder.getHolder().getSharedPreferences();
-        regionValues = getResources().getStringArray(R.array.regions_value);
-        region = uSharedPreferences.getString(Constants.SpKey.KEY_REGION.name(), null);
-        proxySuffix = uSharedPreferences.getString(Constants.SpKey.KEY_PROXY_SUFFIX.name(), proxySuffix);
         bucketName = uSharedPreferences.getString(Constants.SpKey.KEY_DEFAULT_BUCKET.name(), bucketName);
         data = new ArrayList<>();
         objectAdapter = new ObjectAdapter(this, data);
@@ -163,17 +153,6 @@ public class MainActivity extends BaseActivity
             return;
         
         edit_bucket.setText(bucketName);
-        if (TextUtils.isEmpty(region)) {
-            spinner_region.setPrompt(getString(R.string.str_region));
-        } else {
-            for (int i = 0, size = regionValues.length; i < size; i++) {
-                if (TextUtils.equals(regionValues[i], region)) {
-                    spinner_region.setSelection(i);
-                    break;
-                }
-            }
-        }
-        edit_domain_proxy_suffix.setText(proxySuffix);
     }
     
     private boolean checkData() {
@@ -210,6 +189,21 @@ public class MainActivity extends BaseActivity
             return false;
         }
         
+        int domainType = uSharedPreferences.getInt(Constants.SpKey.KEY_DOMAIN_TYPE.name(), -1);
+        if (domainType == -1) {
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle(R.string.str_error)
+                    .setMessage(R.string.alert_no_domain_type)
+                    .setPositiveButton(R.string.str_got_it, (dialog, which) -> {
+                        dialog.dismiss();
+                        startActivity(EditDomainActivity.startAction(MainActivity.this, false));
+                        finish();
+                    })
+                    .setCancelable(false)
+                    .show();
+            return false;
+        }
+        
         authorization = new UfileObjectRemoteAuthorization(publicKey, new ObjectRemoteAuthorization.ApiConfig(authUrl, authPrivateUrl));
         return true;
     }
@@ -239,7 +233,10 @@ public class MainActivity extends BaseActivity
         switch (item.getItemId()) {
             case R.id.action_edit_auth_server: {
                 startActivity(EditAuthServerActivity.startAction(MainActivity.this, true));
-                finish();
+                return true;
+            }
+            case R.id.action_edit_domain_bucket: {
+                startActivity(EditDomainActivity.startAction(MainActivity.this, true));
                 return true;
             }
             default:
@@ -357,22 +354,9 @@ public class MainActivity extends BaseActivity
         }
     };
     
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        region = regionValues[position];
-    }
-    
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-    
-    }
-    
     private void saveBucketConfig() {
         bucketName = edit_bucket.getText().toString().trim();
-        proxySuffix = edit_domain_proxy_suffix.getText().toString().trim();
-        uSharedPreferences.edit().putString(Constants.SpKey.KEY_DEFAULT_BUCKET.name(), bucketName)
-                .putString(Constants.SpKey.KEY_REGION.name(), region)
-                .putString(Constants.SpKey.KEY_PROXY_SUFFIX.name(), proxySuffix).apply();
+        uSharedPreferences.edit().putString(Constants.SpKey.KEY_DEFAULT_BUCKET.name(), bucketName).apply();
     }
     
     @Override
@@ -432,28 +416,15 @@ public class MainActivity extends BaseActivity
                     .create().show();
             return;
         }
-        if (TextUtils.isEmpty(region)) {
-            refresh_layout_object_list.finishRefresh();
-            new AlertDialog.Builder(MainActivity.this)
-                    .setTitle(R.string.str_error)
-                    .setMessage(R.string.alert_select_region)
-                    .setPositiveButton(R.string.str_got_it, (dialog, which) -> dialog.dismiss())
-                    .setCancelable(false)
-                    .create().show();
-            return;
-        }
-        if (TextUtils.isEmpty(proxySuffix)) {
-            refresh_layout_object_list.finishRefresh();
-            new AlertDialog.Builder(MainActivity.this)
-                    .setTitle(R.string.str_error)
-                    .setMessage(R.string.alert_input_proxy_suffix)
-                    .setPositiveButton(R.string.str_got_it, (dialog, which) -> dialog.dismiss())
-                    .setCancelable(false)
-                    .create().show();
-            return;
+        
+        int domainType = uSharedPreferences.getInt(Constants.SpKey.KEY_DOMAIN_TYPE.name(), Constants.DOMAIN_TYPE_NORMAL);
+        if (domainType == Constants.DOMAIN_TYPE_NORMAL) {
+            objectConfig = new ObjectConfig(uSharedPreferences.getString(Constants.SpKey.KEY_REGION.name(), null),
+                    uSharedPreferences.getString(Constants.SpKey.KEY_PROXY_SUFFIX.name(), Constants.DEFAULT_DOMAIN_PROXY_SUFFIX));
+        } else {
+            objectConfig = new ObjectConfig(uSharedPreferences.getString(Constants.SpKey.KEY_CUSTOM_DOMAIN.name(), null));
         }
         
-        objectConfig = new ObjectConfig(region, proxySuffix);
         nextMark = "";
         
         objectApiBuilder = UfileClient.object(authorization, objectConfig);

@@ -118,8 +118,13 @@ public class ObjectDetailActivity extends BaseActivity implements View.OnClickLi
         String authPrivateUrl = uSharedPreferences.getString(Constants.SpKey.KEY_APPLY_PRIVATE_AUTH_URL.name(), null);
         
         authorization = new UfileObjectRemoteAuthorization(publicKey, new ObjectRemoteAuthorization.ApiConfig(authUrl, authPrivateUrl));
-        objectConfig = new ObjectConfig(uSharedPreferences.getString(Constants.SpKey.KEY_REGION.name(), ""),
-                uSharedPreferences.getString(Constants.SpKey.KEY_PROXY_SUFFIX.name(), ""));
+        int domainType = uSharedPreferences.getInt(Constants.SpKey.KEY_DOMAIN_TYPE.name(), Constants.DOMAIN_TYPE_NORMAL);
+        if (domainType == Constants.DOMAIN_TYPE_NORMAL) {
+            objectConfig = new ObjectConfig(uSharedPreferences.getString(Constants.SpKey.KEY_REGION.name(), null),
+                    uSharedPreferences.getString(Constants.SpKey.KEY_PROXY_SUFFIX.name(), Constants.DEFAULT_DOMAIN_PROXY_SUFFIX));
+        } else {
+            objectConfig = new ObjectConfig(uSharedPreferences.getString(Constants.SpKey.KEY_CUSTOM_DOMAIN.name(), null));
+        }
         Intent intent = getIntent();
         if (intent != null)
             objectInfo = (ObjectInfoBean) intent.getSerializableExtra("objectInfo");
