@@ -15,7 +15,12 @@ public class Constants {
         KEY_DEFAULT_BUCKET,
         KEY_LATEST_DOWNLOAD_DIRECTORY,
         KEY_LATEST_UPLOAD_DIRECTORY,
+        KEY_DOMAIN_TYPE,
+        KEY_CUSTOM_DOMAIN,
     }
+    
+    public final static int DOMAIN_TYPE_NORMAL = 0;
+    public final static int DOMAIN_TYPE_CUSTOM = 1;
     
     public static final String DEFAULT_DOMAIN_PROXY_SUFFIX = "ufileos.com";
     
