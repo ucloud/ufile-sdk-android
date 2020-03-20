@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageButton;
-import android.support.v7.widget.AppCompatSpinner;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,12 +35,13 @@ import cn.ucloud.ufile.UfileClient;
 import cn.ucloud.ufile.api.ApiError;
 import cn.ucloud.ufile.api.object.ObjectApiBuilder;
 import cn.ucloud.ufile.api.object.ObjectConfig;
+import cn.ucloud.ufile.auth.ObjectAuthorizer;
 import cn.ucloud.ufile.auth.ObjectRemoteAuthorization;
 import cn.ucloud.ufile.auth.UfileObjectRemoteAuthorization;
 import cn.ucloud.ufile.bean.ObjectInfoBean;
 import cn.ucloud.ufile.bean.ObjectListBean;
 import cn.ucloud.ufile.bean.UfileErrorBean;
-import cn.ucloud.ufile.bean.base.BaseResponseBean;
+import cn.ucloud.ufile.bean.base.BaseObjectResponseBean;
 import cn.ucloud.ufile.demo.R;
 import cn.ucloud.ufile.demo.Constants;
 import cn.ucloud.ufile.demo.data.USharedPreferenceHolder;
@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity
     private String bucketName = "";
     private String nextMark = "";
     
-    private UfileObjectRemoteAuthorization authorization;
+    private ObjectAuthorizer authorization;
     private ObjectConfig objectConfig;
     private ObjectApiBuilder objectApiBuilder;
     
@@ -452,9 +452,9 @@ public class MainActivity extends BaseActivity
     private void doUploadFile(File file) {
         progressDialog.show();
         objectApiBuilder.uploadHit(file).nameAs(file.getName()).toBucket(bucketName)
-                .executeAsync(new UfileCallback<BaseResponseBean>() {
+                .executeAsync(new UfileCallback<BaseObjectResponseBean>() {
                     @Override
-                    public void onResponse(BaseResponseBean response) {
+                    public void onResponse(BaseObjectResponseBean response) {
                         getHandler().post(() -> {
                             progressDialog.dismiss();
                             if (response == null || response.getRetCode() != 0) {
@@ -535,9 +535,9 @@ public class MainActivity extends BaseActivity
     private void doUploadStream(String keyName, byte[] bytes) {
         progressDialog.show();
         objectApiBuilder.uploadHit(new ByteArrayInputStream(bytes)).nameAs(keyName).toBucket(bucketName)
-                .executeAsync(new UfileCallback<BaseResponseBean>() {
+                .executeAsync(new UfileCallback<BaseObjectResponseBean>() {
                     @Override
-                    public void onResponse(BaseResponseBean response) {
+                    public void onResponse(BaseObjectResponseBean response) {
                         getHandler().post(() -> {
                             progressDialog.dismiss();
                             if (response == null || response.getRetCode() != 0) {
