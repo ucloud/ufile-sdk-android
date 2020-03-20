@@ -6,8 +6,8 @@ android {
         applicationId "cn.ucloud.ufile.demo"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -30,7 +30,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'cn.ucloud.ufile:ufile-client-java:2.1.3'
+    implementation 'cn.ucloud.ufile:ufile-client-java:2.4.2'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-19'
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-19'//没有使用特殊Header，可以不加这行
 }

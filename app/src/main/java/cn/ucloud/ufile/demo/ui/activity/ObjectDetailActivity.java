@@ -18,6 +18,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import cn.ucloud.ufile.UfileClient;
 import cn.ucloud.ufile.api.ApiError;
@@ -29,6 +30,7 @@ import cn.ucloud.ufile.auth.UfileObjectRemoteAuthorization;
 import cn.ucloud.ufile.bean.ObjectInfoBean;
 import cn.ucloud.ufile.bean.ObjectProfile;
 import cn.ucloud.ufile.bean.UfileErrorBean;
+import cn.ucloud.ufile.bean.base.BaseObjectResponseBean;
 import cn.ucloud.ufile.bean.base.BaseResponseBean;
 import cn.ucloud.ufile.demo.Constants;
 import cn.ucloud.ufile.demo.R;
@@ -54,7 +56,7 @@ public class ObjectDetailActivity extends BaseActivity implements View.OnClickLi
     private Button btn_object_download, btn_object_delete;
     
     private ProgressDialog progressDialog;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
     private ObjectInfoBean objectInfo;
     private ObjectAuthorizer authorization;
     private ObjectConfig objectConfig;
@@ -185,9 +187,9 @@ public class ObjectDetailActivity extends BaseActivity implements View.OnClickLi
     private void doDelete() {
         progressDialog.show();
         UfileClient.object(authorization, objectConfig).deleteObject(objectInfo.getFileName(), objectInfo.getBucketName())
-                .executeAsync(new UfileCallback<BaseResponseBean>() {
+                .executeAsync(new UfileCallback<BaseObjectResponseBean>() {
                     @Override
-                    public void onResponse(BaseResponseBean response) {
+                    public void onResponse(BaseObjectResponseBean response) {
                         getHandler().post(() -> {
                             progressDialog.dismiss();
                             if (response.getRetCode() == 0) {

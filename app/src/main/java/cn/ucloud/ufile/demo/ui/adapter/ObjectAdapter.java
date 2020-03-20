@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import cn.ucloud.ufile.bean.ObjectInfoBean;
 import cn.ucloud.ufile.demo.R;
@@ -26,7 +27,7 @@ public class ObjectAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater layoutInflater;
     
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
     
     public ObjectAdapter(Context context, List<ObjectInfoBean> data) {
         this.data = data;
