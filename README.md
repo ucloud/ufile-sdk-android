@@ -1,5 +1,6 @@
 # US3 SDK for Android
 
+[![Software License](https://img.shields.io/github/license/saltstack/salt)](LICENSE)
 [![](https://img.shields.io/github/release/ucloud/ufile-sdk-java.svg)](https://github.com/ucloud/ufile-sdk-java)
 [![](https://img.shields.io/github/last-commit/ucloud/ufile-sdk-java.svg)](https://github.com/ucloud/ufile-sdk-java)
 [![](https://img.shields.io/github/commits-since/ucloud/ufile-sdk-java/latest.svg)](https://github.com/ucloud/ufile-sdk-java)
